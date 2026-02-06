@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Task Completion Monitoring System - Track employee tasks and productivity">
+    <title>TaskTracker Pro - Employee Task Monitoring</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">📊</span>
+                <span class="logo-text">TaskTracker Pro</span>
+            </div>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" data-view="dashboard">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">Dashboard</span>
+            </li>
+            <li class="nav-item" data-view="employees">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Employees</span>
+            </li>
+            <li class="nav-item" data-view="tasks">
+                <span class="nav-icon">📋</span>
+                <span class="nav-text">All Tasks</span>
+            </li>
+            <li class="nav-item" data-view="incomplete">
+                <span class="nav-icon">⚠️</span>
+                <span class="nav-text">Incomplete Tasks</span>
+            </li>
+            <li class="nav-item" data-view="reports">
+                <span class="nav-icon">📈</span>
+                <span class="nav-text">Reports</span>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search employees or tasks...">
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="addTaskBtn">+ New Task</button>
+                <button class="btn btn-secondary" id="addEmployeeBtn">+ Add Employee</button>
+            </div>
+        </header>
+
+        <!-- Dashboard View -->
+        <section class="view active" id="dashboardView">
+            <h1 class="page-title">Dashboard Overview</h1>
+            <div class="stats-grid">
+                <div class="stat-card gradient-blue">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 id="totalEmployees">0</h3>
+                        <p>Total Employees</p>
+                    </div>
+                </div>
+                <div class="stat-card gradient-green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="completedTasks">0</h3>
+                        <p>Completed Tasks</p>
+                    </div>
+                </div>
+                <div class="stat-card gradient-orange">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <h3 id="pendingTasks">0</h3>
+                        <p>Pending Tasks</p>
+                    </div>
+                </div>
+                <div class="stat-card gradient-red">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-info">
+                        <h3 id="overdueTasks">0</h3>
+                        <p>Overdue Tasks</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h2 class="card-title">Employees Not Completing Tasks</h2>
+                    <div class="incomplete-employees-list" id="incompleteEmployeesList">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">Recent Activity</h2>
+                    <div class="activity-list" id="activityList">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Task Completion Progress</h2>
+                <div class="progress-chart" id="progressChart">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Employees View -->
+        <section class="view" id="employeesView">
+            <h1 class="page-title">Employee Management</h1>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Tasks Assigned</th>
+                            <th>Completed</th>
+                            <th>Pending</th>
+                            <th>Completion Rate</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeesTableBody">
+                        <!-- Dynamically populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- All Tasks View -->
+        <section class="view" id="tasksView">
+            <h1 class="page-title">All Tasks</h1>
+            <div class="filter-bar">
+                <select id="filterStatus" class="filter-select">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="overdue">Overdue</option>
+                </select>
+                <select id="filterEmployee" class="filter-select">
+                    <option value="all">All Employees</option>
+                </select>
+                <select id="filterPriority" class="filter-select">
+                    <option value="all">All Priorities</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+            <div class="tasks-grid" id="tasksGrid">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- Incomplete Tasks View -->
+        <section class="view" id="incompleteView">
+            <h1 class="page-title">⚠️ Incomplete Tasks & Pending Employees</h1>
+            <div class="alert-banner">
+                <span class="alert-icon">📢</span>
+                <span>These employees have not completed their assigned tasks. Take action to ensure timely completion.</span>
+            </div>
+            <div class="incomplete-grid" id="incompleteGrid">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- Reports View -->
+        <section class="view" id="reportsView">
+            <h1 class="page-title">Reports & Analytics</h1>
+            <div class="reports-grid">
+                <div class="card report-card">
+                    <h2 class="card-title">Completion Rate by Employee</h2>
+                    <div class="report-chart" id="employeeCompletionChart">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                <div class="card report-card">
+                    <h2 class="card-title">Task Distribution by Priority</h2>
+                    <div class="priority-distribution" id="priorityDistribution">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                <div class="card report-card">
+                    <h2 class="card-title">Top Performers</h2>
+                    <div class="performers-list" id="topPerformers">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                <div class="card report-card">
+                    <h2 class="card-title">Bottom Performers</h2>
+                    <div class="performers-list" id="bottomPerformers">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="taskModalTitle">Add New Task</h2>
+                <button class="close-btn" id="closeTaskModal">&times;</button>
+            </div>
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <div class="form-group">
+                    <label for="taskTitle">Task Title</label>
+                    <input type="text" id="taskTitle" required placeholder="Enter task title">
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" rows="3" placeholder="Enter task description"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskEmployee">Assign To</label>
+                        <select id="taskEmployee" required>
+                            <option value="">Select Employee</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriority">Priority</label>
+                        <select id="taskPriority" required>
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDueDate">Due Date</label>
+                        <input type="date" id="taskDueDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskStatus">Status</label>
+                        <select id="taskStatus">
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelTask">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div class="modal" id="employeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="employeeModalTitle">Add New Employee</h2>
+                <button class="close-btn" id="closeEmployeeModal">&times;</button>
+            </div>
+            <form id="employeeForm">
+                <input type="hidden" id="employeeId">
+                <div class="form-group">
+                    <label for="employeeName">Full Name</label>
+                    <input type="text" id="employeeName" required placeholder="Enter employee name">
+                </div>
+                <div class="form-group">
+                    <label for="employeeEmail">Email</label>
+                    <input type="email" id="employeeEmail" required placeholder="Enter email address">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="employeeDepartment">Department</label>
+                        <select id="employeeDepartment" required>
+                            <option value="">Select Department</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Design">Design</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Sales">Sales</option>
+                            <option value="HR">HR</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Operations">Operations</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeRole">Role</label>
+                        <input type="text" id="employeeRole" required placeholder="Enter role">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEmployee">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Confirm Action</h2>
+                <button class="close-btn" id="closeConfirmModal">&times;</button>
+            </div>
+            <p id="confirmMessage">Are you sure you want to proceed?</p>
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="cancelConfirm">Cancel</button>
+                <button class="btn btn-danger" id="confirmAction">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
